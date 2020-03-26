@@ -6,7 +6,7 @@
 ## 安装
 
 ```shell
-$ composer require achais/esign -vvv
+$ composer require achais/esign:dev-master -vvv
 ```
 
 ## 使用
