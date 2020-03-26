@@ -1,6 +1,6 @@
 {
     "name": "achais\/esign",
-    "description": "esign sdk.",
+    "description": "根据e签宝官方文档开发的一个 PHP 扩展包, 悟空 API V2 SDK.",
     "license": "MIT",
     "authors": [
         {

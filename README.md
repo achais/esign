@@ -1,6 +1,6 @@
 <h1 align="center"> ESign </h1>
 
-<p align="center">根据e签宝官方文档开发的一个扩展包, 悟空 API V2 SDK </p>
+<p align="center">根据e签宝官方文档开发的一个 PHP 扩展包, 悟空 API V2 SDK </p>
 
 
 ## 安装
