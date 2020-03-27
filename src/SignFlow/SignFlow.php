@@ -16,14 +16,18 @@ class SignFlow extends AbstractAPI
      * 签署流程创建
      *
      * @param $businessScene
+     * @param $noticeDeveloperUrl
      * @return Collection|null
      * @throws HttpException
      */
-    public function createSignFlow($businessScene)
+    public function createSignFlow($businessScene, $noticeDeveloperUrl = null)
     {
         $url = '/v1/signflows';
         $params = [
-            'businessScene' => $businessScene
+            'businessScene' => $businessScene,
+            'configInfo' => [
+                'noticeDeveloperUrl' => $noticeDeveloperUrl
+            ]
         ];
         return $this->parseJSON('json', [$url, $params]);
     }
