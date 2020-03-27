@@ -20,7 +20,7 @@ class AccessToken
 
     protected $tokenJsonKey = 'token';
 
-    protected $prefix = 'esign.common.access_token';
+    protected $prefix = 'esign.common.access_token.';
 
     const API_TOKEN_GET = '/v1/oauth2/access_token';
 
@@ -84,11 +84,6 @@ class AccessToken
         return $this->secret;
     }
 
-    protected function getCacheKey()
-    {
-        return $this->cacheKey;
-    }
-
     protected function getCache()
     {
         return $this->cache ?: $this->cache = new FilesystemCache(sys_get_temp_dir());
@@ -110,5 +105,21 @@ class AccessToken
         $this->prefix = $prefix;
 
         return $this;
+    }
+
+    public function setCacheKey($cacheKey)
+    {
+        $this->cacheKey = $cacheKey;
+
+        return $this;
+    }
+
+    protected function getCacheKey()
+    {
+        if (is_null($this->cacheKey)) {
+            return $this->prefix . $this->appId;
+        }
+
+        return $this->cacheKey;
     }
 }
