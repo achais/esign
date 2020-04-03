@@ -99,4 +99,26 @@ class SignFlow extends AbstractAPI
         $url = "/v1/signflows/{$flowId}/start";
         return $this->parseJSON('put', [$url]);
     }
+
+    /**
+     * 获取签署地址
+     * @param $flowId
+     * @param $accountId
+     * @param null $orgId
+     * @param int $urlType
+     * @param null $appScheme
+     * @return Collection|null
+     * @throws HttpException
+     */
+    public function getExecuteUrl($flowId, $accountId, $orgId = null, $urlType = 0, $appScheme = null)
+    {
+        $url = "/v1/signflows/{$flowId}/executeUrl";
+        $params = [
+            'accountId' => $accountId,
+            'organizeId' => $orgId,
+            'urlType' => $urlType,
+            'appScheme' => $appScheme
+        ];
+        return $this->parseJSON('get', [$url, $params]);
+    }
 }
