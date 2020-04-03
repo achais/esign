@@ -59,7 +59,7 @@ class SignFlow extends AbstractAPI
      *
      * @param $flowId
      * @param $fileId
-     * @param $signerAccountId
+     * @param $sealId
      * @param $posPage
      * @param $posX
      * @param $posY
@@ -68,7 +68,7 @@ class SignFlow extends AbstractAPI
      * @return Collection|null
      * @throws HttpException
      */
-    public function addPlatformSign($flowId, $fileId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = [])
+    public function addPlatformSign($flowId, $fileId, $sealId,  $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = [])
     {
         $url = "/v1/signflows/{$flowId}/signfields/handSign";
         $signFieldOne = [
