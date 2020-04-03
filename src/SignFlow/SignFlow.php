@@ -55,7 +55,7 @@ class SignFlow extends AbstractAPI
     }
 
     /**
-     * 签署区添加
+     * 添加平台自动盖章签署区
      *
      * @param $flowId
      * @param $fileId
@@ -63,10 +63,48 @@ class SignFlow extends AbstractAPI
      * @param $posPage
      * @param $posX
      * @param $posY
+     * @param $signDateBeanType
+     * @param $signDateBean
      * @return Collection|null
      * @throws HttpException
      */
-    public function addHandSign($flowId, $fileId, $signerAccountId, $posPage, $posX, $posY)
+    public function addPlatformSign($flowId, $fileId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = [])
+    {
+        $url = "/v1/signflows/{$flowId}/signfields/handSign";
+        $signFieldOne = [
+            'fileId' => $fileId,
+            'posBean' => [
+                'posPage' => $posPage,
+                'posX' => $posX,
+                'posY' => $posY,
+            ],
+            'signDateBeanType' => $signDateBeanType,
+            'signDateBean' => $signDateBean,
+        ];
+
+        $params = [
+            'signfields' => [
+                $signFieldOne,
+            ]
+        ];
+        return $this->parseJSON('json', [$url, $params]);
+    }
+
+    /**
+     * 添加手动盖章签署区
+     *
+     * @param $flowId
+     * @param $fileId
+     * @param $signerAccountId
+     * @param $posPage
+     * @param $posX
+     * @param $posY
+     * @param $signDateBeanType
+     * @param $signDateBean
+     * @return Collection|null
+     * @throws HttpException
+     */
+    public function addHandSign($flowId, $fileId, $signerAccountId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = [])
     {
         $url = "/v1/signflows/{$flowId}/signfields/handSign";
         $signFieldOne = [
@@ -76,7 +114,9 @@ class SignFlow extends AbstractAPI
                 'posPage' => $posPage,
                 'posX' => $posX,
                 'posY' => $posY,
-            ]
+            ],
+            'signDateBeanType' => $signDateBeanType,
+            'signDateBean' => $signDateBean,
         ];
 
         $params = [
