@@ -70,9 +70,10 @@ class SignFlow extends AbstractAPI
      */
     public function addPlatformSign($flowId, $fileId, $sealId,  $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = [])
     {
-        $url = "/v1/signflows/{$flowId}/signfields/handSign";
+        $url = "/v1/signflows/{$flowId}/signfields/platformSign";
         $signFieldOne = [
             'fileId' => $fileId,
+            'sealId' => $sealId,
             'posBean' => [
                 'posPage' => $posPage,
                 'posX' => $posX,
