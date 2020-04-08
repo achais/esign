@@ -17,13 +17,15 @@ class SignFlow extends AbstractAPI
      *
      * @param $businessScene
      * @param $noticeDeveloperUrl
+     * @param $autoArchive
      * @return Collection|null
      * @throws HttpException
      */
-    public function createSignFlow($businessScene, $noticeDeveloperUrl = null)
+    public function createSignFlow($businessScene, $noticeDeveloperUrl = null, $autoArchive = true)
     {
         $url = '/v1/signflows';
         $params = [
+            'autoArchive' => $autoArchive,
             'businessScene' => $businessScene,
             'configInfo' => [
                 'noticeDeveloperUrl' => $noticeDeveloperUrl
@@ -68,7 +70,7 @@ class SignFlow extends AbstractAPI
      * @return Collection|null
      * @throws HttpException
      */
-    public function addPlatformSign($flowId, $fileId, $sealId,  $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null)
+    public function addPlatformSign($flowId, $fileId, $sealId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null)
     {
         $url = "/v1/signflows/{$flowId}/signfields/platformSign";
         $signFieldOne = [
