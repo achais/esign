@@ -43,7 +43,7 @@ class AccessToken
 
         if ($forceRefresh || empty($cached)) {
             $token = $this->getTokenFromServer();
-            $this->getCache()->save($cacheKey, $token['data'][$this->tokenJsonKey], $token['data']['expiresIn'] / 1000 - 1500);
+            $this->getCache()->save($cacheKey, $token['data'][$this->tokenJsonKey], 60 * 60);
 
             return $token['data'][$this->tokenJsonKey];
         }
