@@ -37,7 +37,7 @@ class Account extends AbstractAPI
     }
 
     /**
-     * 查询个人信息
+     * 查询个人信息 By 账户id
      *
      * @param $accountId
      * @return Collection|null
@@ -49,6 +49,23 @@ class Account extends AbstractAPI
         $url = '/v1/accounts/' . $accountId;
 
         return $this->parseJSON('get', [$url]);
+    }
+
+    /**
+     * 查询个人信息 By 第三方id
+     *
+     * @param $thirdId
+     * @return Collection|null
+     * @throws HttpException
+     */
+    public function queryPersonByThirdId($thirdId)
+    {
+        $url = '/v1/accounts/getByThirdId';
+        $params = [
+            'thirdPartyUserId' => $thirdId
+        ];
+
+        return $this->parseJSON('get', [$url, $params]);
     }
 
     /**
