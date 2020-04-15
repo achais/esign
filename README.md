@@ -46,7 +46,7 @@ $templateId = 'd895b34de77041dca853aa454c042cb2';
 $simpleFormFields = [
     '1a54591dcb5f40bb86048743e7e21c18' => '测试名称',
     '9b55340f5a7a4b089dd7c03a397fa4ef' => '测试甲方',
-    'c7efd37736a94e1c85ffb21fd0de88ff' => date('Y-m-d H:i:s'),
+    'c7efd37736a94e1c85ffb21fd0de88ff' => date('Y-m-d'),
 ];
 
 // 根据模板创建文档
