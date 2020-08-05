@@ -67,10 +67,11 @@ class SignFlow extends AbstractAPI
      * @param $posY
      * @param $signDateBeanType
      * @param $signDateBean
+     * @param $signType
      * @return Collection|null
      * @throws HttpException
      */
-    public function addPlatformSign($flowId, $fileId, $sealId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null)
+    public function addPlatformSign($flowId, $fileId, $sealId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null, $signType = null)
     {
         $url = "/v1/signflows/{$flowId}/signfields/platformSign";
         $signFieldOne = [
@@ -83,6 +84,48 @@ class SignFlow extends AbstractAPI
             ],
             'signDateBeanType' => $signDateBeanType,
             'signDateBean' => $signDateBean,
+            'signType' => $signType,
+        ];
+
+        $params = [
+            'signfields' => [
+                $signFieldOne,
+            ]
+        ];
+        return $this->parseJSON('json', [$url, $params]);
+    }
+
+    /**
+     * 添加签署方自动盖章签署区
+     *
+     * @param $flowId
+     * @param $fileId
+     * @param $authorizedAccountId
+     * @param $sealId
+     * @param $posPage
+     * @param $posX
+     * @param $posY
+     * @param int $signDateBeanType
+     * @param null $signDateBean
+     * @param null $signType
+     * @return Collection|null
+     * @throws HttpException
+     */
+    public function addAutoSign($flowId, $fileId, $authorizedAccountId, $sealId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null, $signType = null)
+    {
+        $url = "/v1/signflows/{$flowId}/signfields/autoSign";
+        $signFieldOne = [
+            'fileId' => $fileId,
+            'authorizedAccountId' => $authorizedAccountId,
+            'sealId' => $sealId,
+            'posBean' => [
+                'posPage' => $posPage,
+                'posX' => $posX,
+                'posY' => $posY,
+            ],
+            'signDateBeanType' => $signDateBeanType,
+            'signDateBean' => $signDateBean,
+            'signType' => $signType,
         ];
 
         $params = [

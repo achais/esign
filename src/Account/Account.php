@@ -91,9 +91,8 @@ class Account extends AbstractAPI
             'idNumber' => $idNumber,
         ];
 
-        return $this->parseJSON('json', [$url, $params]);
+        return $this->parseJSON('put', [$url, $params]);
     }
-
 
     /**
      * 创建机构账号
@@ -125,7 +124,7 @@ class Account extends AbstractAPI
     }
 
     /**
-     * 查询机构信息
+     * 查询机构信息 by 账户id
      *
      * @param $orgId
      * @return Collection|null
@@ -136,5 +135,80 @@ class Account extends AbstractAPI
         $url = '/v1/organizations/' . $orgId;
 
         return $this->parseJSON('get', [$url]);
+    }
+
+    /**
+     * 查询机构信息 by 第三方id
+     *
+     * @param $thirdId
+     * @return Collection|null
+     * @throws HttpException
+     */
+    public function queryOrganizeByThirdId($thirdId)
+    {
+        $url = '/v1/organizations/getByThirdId';
+        $params = [
+            'thirdPartyUserId' => $thirdId
+        ];
+
+        return $this->parseJSON('get', [$url, $params]);
+    }
+
+    /**
+     * 更新机构信息
+     *
+     * @param $orgId
+     * @param string|null $name
+     * @param string|null $idType
+     * @param string|null $idNumber
+     * @param string|null $orgLegalIdNumber
+     * @param string|null $orgLegalName
+     * @return Collection|null
+     * @throws HttpException
+     */
+    public function updateOrganizeByAccountId($orgId, $name = null, $idType = null, $idNumber = null, $orgLegalIdNumber = null, $orgLegalName = null)
+    {
+        $url = "/v1/organizations/{$orgId}";
+        $params = [
+            'name' => $name,
+            'idType' => $idType,
+            'idNumber' => $idNumber,
+            'orgLegalIdNumber' => $orgLegalIdNumber,
+            'orgLegalName' => $orgLegalName,
+        ];
+
+        return $this->parseJSON('put', [$url, $params]);
+    }
+
+    /**
+     * 静默签署授权
+     *
+     * @param $accountId
+     * @param string|null $deadline 授权截止时间, 格式为yyyy-MM-dd HH:mm:ss，默认无限期
+     * @return Collection|null
+     * @throws HttpException
+     */
+    public function signAuth($accountId, $deadline = null)
+    {
+        $url = "/v1/signAuth/{$accountId}";
+        $params = [
+            'deadline' => $deadline,
+        ];
+
+        return $this->parseJSON('json', [$url, $params]);
+    }
+
+    /**
+     * 取消静默签署授权
+     *
+     * @param $accountId
+     * @return Collection|null
+     * @throws HttpException
+     */
+    public function cancelSignAuth($accountId)
+    {
+        $url = "/v1/signAuth/{$accountId}";
+
+        return $this->parseJSON('delete', [$url]);
     }
 }
