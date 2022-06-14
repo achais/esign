@@ -21,7 +21,7 @@ class Client extends BaseClient
      *
      * @throws HttpException
      */
-    public function createPersonAccount($thirdPartyUserId, $name, $idType, $idNumber, $mobile = null, $email = null)
+    public function createPersonAccount($thirdPartyUserId, $name, $idType, $idNumber, $mobile = null, $email = null): ?Collection
     {
         $url = '/v1/accounts/createByThirdPartyUserId';
         $params = [
@@ -44,7 +44,7 @@ class Client extends BaseClient
      *
      * @throws HttpException
      */
-    public function queryPersonByAccountId($accountId)
+    public function queryPersonByAccountId($accountId): ?Collection
     {
         $url = '/v1/accounts/' . $accountId;
 
@@ -58,7 +58,7 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function queryPersonByThirdId($thirdId)
+    public function queryPersonByThirdId($thirdId): ?Collection
     {
         $url = '/v1/accounts/getByThirdId';
         $params = [
@@ -80,101 +80,15 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function updatePersonByAccountId($accountId, $mobile = null, $email = null, $name = null, $idType = null, $idNumber = null)
+    public function updatePersonByAccountId($accountId, $mobile = null, $email = null, $name = null, $idType = null, $idNumber = null): ?Collection
     {
-        $url = "/v1/accounts/{$accountId}";
+        $url = '/v1/accounts/' . $accountId;
         $params = [
             'mobile' => $mobile,
             'email' => $email,
             'name' => $name,
             'idType' => $idType,
             'idNumber' => $idNumber,
-        ];
-
-        return $this->request('put', [$url, $params]);
-    }
-
-    /**
-     * 创建机构账号
-     *
-     * @param $thirdPartyUserId string 第三方平台标识, 如: 统一信用代码
-     * @param $creatorAccountId string 创建者 accountId
-     * @param $name string 机构名称
-     * @param $idType string 证件类型, 默认: CRED_ORG_USCC
-     * @param $idNumber string 证件号
-     * @param null $orgLegalIdNumber string 企业法人证件号
-     * @param null $orgLegalName string 企业法人名称
-     * @return Collection|null
-     * @throws HttpException
-     */
-    public function createOrganizeAccount($thirdPartyUserId, $creatorAccountId, $name, $idType, $idNumber, $orgLegalIdNumber = null, $orgLegalName = null)
-    {
-        $url = '/v1/organizations/createByThirdPartyUserId';
-        $params = [
-            'thirdPartyUserId' => $thirdPartyUserId,
-            'creator' => $creatorAccountId,
-            'name' => $name,
-            'idType' => $idType,
-            'idNumber' => $idNumber,
-            'orgLegalIdNumber' => $orgLegalIdNumber,
-            'orgLegalName' => $orgLegalName,
-        ];
-
-        return $this->request('json', [$url, $params]);
-    }
-
-    /**
-     * 查询机构信息 by 账户id
-     *
-     * @param $orgId
-     * @return Collection|null
-     * @throws HttpException
-     */
-    public function queryOrganizeByOrgId($orgId)
-    {
-        $url = '/v1/organizations/' . $orgId;
-
-        return $this->request('get', [$url]);
-    }
-
-    /**
-     * 查询机构信息 by 第三方id
-     *
-     * @param $thirdId
-     * @return Collection|null
-     * @throws HttpException
-     */
-    public function queryOrganizeByThirdId($thirdId)
-    {
-        $url = '/v1/organizations/getByThirdId';
-        $params = [
-            'thirdPartyUserId' => $thirdId
-        ];
-
-        return $this->request('get', [$url, $params]);
-    }
-
-    /**
-     * 更新机构信息
-     *
-     * @param $orgId
-     * @param string|null $name
-     * @param string|null $idType
-     * @param string|null $idNumber
-     * @param string|null $orgLegalIdNumber
-     * @param string|null $orgLegalName
-     * @return Collection|null
-     * @throws HttpException
-     */
-    public function updateOrganizeByAccountId($orgId, $name = null, $idType = null, $idNumber = null, $orgLegalIdNumber = null, $orgLegalName = null)
-    {
-        $url = "/v1/organizations/{$orgId}";
-        $params = [
-            'name' => $name,
-            'idType' => $idType,
-            'idNumber' => $idNumber,
-            'orgLegalIdNumber' => $orgLegalIdNumber,
-            'orgLegalName' => $orgLegalName,
         ];
 
         return $this->request('put', [$url, $params]);
@@ -188,9 +102,9 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function signAuth($accountId, $deadline = null)
+    public function signAuth($accountId, $deadline = null): ?Collection
     {
-        $url = "/v1/signAuth/{$accountId}";
+        $url = '/v1/signAuth/' . $accountId;
         $params = [
             'deadline' => $deadline,
         ];
@@ -205,7 +119,7 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function cancelSignAuth($accountId)
+    public function cancelSignAuth($accountId): ?Collection
     {
         $url = "/v1/signAuth/{$accountId}";
 

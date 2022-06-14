@@ -15,7 +15,7 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function createByTemplateId($templateId, $name, $simpleFormFields)
+    public function createByTemplateId($templateId, $name, $simpleFormFields): ?Collection
     {
         $url = '/v1/files/createByTemplate';
         $params = [

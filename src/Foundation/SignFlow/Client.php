@@ -8,10 +8,6 @@ use Lmh\ESign\Support\Collection;
 
 class Client extends BaseClient
 {
-    const NOTICE_TYPE_SMS = '1';
-    const NOTICE_TYPE_EMAIL = '2';
-    const NOTICE_TYPE_NULL = '';
-
     /**
      * 签署流程创建
      *
@@ -45,7 +41,7 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function addDocuments($flowId, $fileId, $encryption = 0, $fileName = null, $filePassword = null)
+    public function addDocuments($flowId, $fileId, $encryption = 0, $fileName = null, $filePassword = null): ?Collection
     {
         $url = "/v1/signflows/{$flowId}/documents";
         $params = [
@@ -71,7 +67,7 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function addPlatformSign($flowId, $fileId, $sealId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null, $signType = null)
+    public function addPlatformSign($flowId, $fileId, $sealId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null, $signType = null): ?Collection
     {
         $url = "/v1/signflows/{$flowId}/signfields/platformSign";
         $signFieldOne = [
@@ -111,7 +107,7 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function addAutoSign($flowId, $fileId, $authorizedAccountId, $sealId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null, $signType = null)
+    public function addAutoSign($flowId, $fileId, $authorizedAccountId, $sealId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null, $signType = null): ?Collection
     {
         $url = "/v1/signflows/{$flowId}/signfields/autoSign";
         $signFieldOne = [
@@ -150,7 +146,7 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function addHandSign($flowId, $fileId, $signerAccountId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null)
+    public function addHandSign($flowId, $fileId, $signerAccountId, $posPage, $posX, $posY, $signDateBeanType = 0, $signDateBean = null): ?Collection
     {
         $url = "/v1/signflows/{$flowId}/signfields/handSign";
         $signFieldOne = [
@@ -180,7 +176,7 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function startSignFlow($flowId)
+    public function startSignFlow($flowId): ?Collection
     {
         $url = "/v1/signflows/{$flowId}/start";
         return $this->request('put', [$url]);
@@ -196,7 +192,7 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function getExecuteUrl($flowId, $accountId, $orgId = null, $urlType = 0, $appScheme = null)
+    public function getExecuteUrl($flowId, $accountId, $orgId = null, $urlType = 0, $appScheme = null): ?Collection
     {
         $url = "/v1/signflows/{$flowId}/executeUrl";
         $params = [

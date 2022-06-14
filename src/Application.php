@@ -21,6 +21,8 @@ use Redis;
  * @property \Lmh\ESign\Foundation\Account\Client $account
  * @property \Lmh\ESign\Foundation\File\Client $file
  * @property \Lmh\ESign\Foundation\SignFlow\Client $signflow
+ * @property \Lmh\ESign\Foundation\Organization\Client $organizations
+ * @property \Lmh\ESign\Foundation\Template\Client $template
  *
  * @package Lmh\ESign
  */
@@ -30,7 +32,14 @@ class Application extends Container
         Foundation\Account\ServiceProvider::class,
         Foundation\File\ServiceProvider::class,
         Foundation\SignFlow\ServiceProvider::class,
+        Foundation\Organization\ServiceProvider::class,
+        Foundation\Template\ServiceProvider::class,
     ];
+
+
+
+
+
 
     public function __construct(array $config = array())
     {
