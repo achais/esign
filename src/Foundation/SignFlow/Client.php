@@ -21,7 +21,7 @@ class Client extends BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function createSignFlow($businessScene, $noticeDeveloperUrl = null, $autoArchive = true)
+    public function createSignFlow($businessScene, $noticeDeveloperUrl = null, $autoArchive = true): ?Collection
     {
         $url = '/v1/signflows';
         $params = [
@@ -31,7 +31,7 @@ class Client extends BaseClient
                 'noticeDeveloperUrl' => $noticeDeveloperUrl
             ]
         ];
-        return $this->parseJSON('json', [$url, $params]);
+        return $this->request('json', [$url, $params]);
     }
 
     /**
@@ -53,7 +53,7 @@ class Client extends BaseClient
                 ['fileId' => $fileId, 'encryption' => $encryption, 'fileName' => $fileName, 'filePassword' => $filePassword],
             ]
         ];
-        return $this->parseJSON('json', [$url, $params]);
+        return $this->request('json', [$url, $params]);
     }
 
     /**
@@ -92,7 +92,7 @@ class Client extends BaseClient
                 $signFieldOne,
             ]
         ];
-        return $this->parseJSON('json', [$url, $params]);
+        return $this->request('json', [$url, $params]);
     }
 
     /**
@@ -133,7 +133,7 @@ class Client extends BaseClient
                 $signFieldOne,
             ]
         ];
-        return $this->parseJSON('json', [$url, $params]);
+        return $this->request('json', [$url, $params]);
     }
 
     /**
@@ -170,7 +170,7 @@ class Client extends BaseClient
                 $signFieldOne,
             ]
         ];
-        return $this->parseJSON('json', [$url, $params]);
+        return $this->request('json', [$url, $params]);
     }
 
     /**
@@ -183,7 +183,7 @@ class Client extends BaseClient
     public function startSignFlow($flowId)
     {
         $url = "/v1/signflows/{$flowId}/start";
-        return $this->parseJSON('put', [$url]);
+        return $this->request('put', [$url]);
     }
 
     /**
@@ -205,6 +205,6 @@ class Client extends BaseClient
             'urlType' => $urlType,
             'appScheme' => $appScheme
         ];
-        return $this->parseJSON('get', [$url, $params]);
+        return $this->request('get', [$url, $params]);
     }
 }

@@ -77,7 +77,7 @@ class AccessToken
 
         $http = $this->getHttp();
 
-        $token = $http->parseJSON($http->get(self::API_TOKEN_GET, $params));
+        $token = $http->request($http->get(self::API_TOKEN_GET, $params));
 
         if (empty($token['data'][$this->tokenJsonKey])) {
             throw new HttpException('Request AccessToken fail. response: ' . json_encode($token, JSON_UNESCAPED_UNICODE));

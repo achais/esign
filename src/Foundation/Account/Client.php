@@ -33,7 +33,7 @@ class Client extends BaseClient
             'email' => $email,
         ];
 
-        return $this->parseJSON('json', [$url, $params]);
+        return $this->request('json', [$url, $params]);
     }
 
     /**
@@ -48,7 +48,7 @@ class Client extends BaseClient
     {
         $url = '/v1/accounts/' . $accountId;
 
-        return $this->parseJSON('get', [$url]);
+        return $this->request('get', [$url]);
     }
 
     /**
@@ -65,7 +65,7 @@ class Client extends BaseClient
             'thirdPartyUserId' => $thirdId
         ];
 
-        return $this->parseJSON('get', [$url, $params]);
+        return $this->request('get', [$url, $params]);
     }
 
     /**
@@ -91,7 +91,7 @@ class Client extends BaseClient
             'idNumber' => $idNumber,
         ];
 
-        return $this->parseJSON('put', [$url, $params]);
+        return $this->request('put', [$url, $params]);
     }
 
     /**
@@ -120,7 +120,7 @@ class Client extends BaseClient
             'orgLegalName' => $orgLegalName,
         ];
 
-        return $this->parseJSON('json', [$url, $params]);
+        return $this->request('json', [$url, $params]);
     }
 
     /**
@@ -134,7 +134,7 @@ class Client extends BaseClient
     {
         $url = '/v1/organizations/' . $orgId;
 
-        return $this->parseJSON('get', [$url]);
+        return $this->request('get', [$url]);
     }
 
     /**
@@ -151,7 +151,7 @@ class Client extends BaseClient
             'thirdPartyUserId' => $thirdId
         ];
 
-        return $this->parseJSON('get', [$url, $params]);
+        return $this->request('get', [$url, $params]);
     }
 
     /**
@@ -177,7 +177,7 @@ class Client extends BaseClient
             'orgLegalName' => $orgLegalName,
         ];
 
-        return $this->parseJSON('put', [$url, $params]);
+        return $this->request('put', [$url, $params]);
     }
 
     /**
@@ -195,7 +195,7 @@ class Client extends BaseClient
             'deadline' => $deadline,
         ];
 
-        return $this->parseJSON('json', [$url, $params]);
+        return $this->request('json', [$url, $params]);
     }
 
     /**
@@ -209,6 +209,6 @@ class Client extends BaseClient
     {
         $url = "/v1/signAuth/{$accountId}";
 
-        return $this->parseJSON('delete', [$url]);
+        return $this->request('delete', [$url]);
     }
 }

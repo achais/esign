@@ -23,7 +23,7 @@ class Client extends BaseClient
             'templateId' => $templateId,
             'simpleFormFields' => $simpleFormFields,
         ];
-        return $this->parseJSON('json', [$url, $params]);
+        return $this->request('json', [$url, $params]);
     }
 
 }

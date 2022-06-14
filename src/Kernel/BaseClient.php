@@ -84,18 +84,16 @@ abstract class BaseClient
      * @return Collection|null
      * @throws HttpException
      */
-    public function parseJSON($method, array $args)
+    public function request($method, array $args): ?Collection
     {
         $http = $this->getHttp();
+        $response = call_user_func_array([$http, $method], $args);
 
-        $contents = $http->parseJSON(call_user_func_array([$http, $method], $args));
-
+        $contents = $http->parseJSON($response);
         if (empty($contents)) {
             return null;
         }
-
         $this->checkAndThrow($contents);
-
         return (new Collection($contents))->get('data');
     }
 
