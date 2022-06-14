@@ -1,12 +1,8 @@
-<h1 align="center"> ESign </h1>
-
-<p align="center">根据e签宝官方文档开发的一个 PHP 扩展包, 悟空 API V2 SDK </p>
-
 
 ## 安装
 
 ```shell
-$ composer require achais/esign:dev-master -vvv
+$ composer require lmh/esign:dev-master -vvv
 ```
 
 ## 使用
@@ -26,7 +22,7 @@ $config = [
    ],
 ];
 
-$eSign = new \Achais\ESign\Application($config);
+$eSign = new \Lmh\ESign\Application($config);
 
 $thirdPartyUserId = 'your_party_user_id'; // 用户唯一标识，可传入第三方平台的个人用户id、证件号、手机号、邮箱等，如果设置则作为账号唯一性字段，相同信息不可重复创建。
 $name = 'your_name'; // 姓名
@@ -68,27 +64,3 @@ $startSignFlowRet = $eSign->signflow->startSignFlow($flowId);
 echo $startSignFlowRet;
 ```
 
-## 更多方法
-
-\Achais\ESign\Application 提供了几个服务列在了 $providers 属性里面, 想看使用方法的朋友最好直接阅读源码噢~ 我偷懒
-
-查看方法和参数, 快速跳转链接
-- AccessToken 相关[点击查看](https://github.com/achais/esign/tree/master/src/Core/AccessToken.php)
-- 签署方账户API 相关[点击查看](https://github.com/achais/esign/tree/master/src/Account/Account.php)
-- 文件模板API 相关[点击查看](https://github.com/achais/esign/tree/master/src/File/File.php)
-- 签署流程API 相关[点击查看](https://github.com/achais/esign/tree/master/src/SignFlow/SignFlow.php)
-
-
-## 贡献
-
-You can contribute in one of three ways:
-
-1. File bug reports using the [issue tracker](https://github.com/achais/esign/issues).
-2. Answer questions or fix bugs on the [issue tracker](https://github.com/achais/esign/issues).
-3. Contribute new features or update the wiki.
-
-_The code contribution process is not very formal. You just need to make sure that you follow the PSR-0, PSR-1, and PSR-2 coding guidelines. Any new code contributions must be accompanied by unit tests where applicable._
-
-## License
-
-MIT

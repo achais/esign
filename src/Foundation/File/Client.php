@@ -1,12 +1,12 @@
 <?php
 
-namespace Achais\ESign\File;
+namespace Lmh\ESign\Foundation\File;
 
-use Achais\ESign\Core\AbstractAPI;
-use Achais\ESign\Exceptions\HttpException;
-use Achais\ESign\Support\Collection;
+use Lmh\ESign\Core\BaseClient;
+use Lmh\ESign\Exceptions\HttpException;
+use Lmh\ESign\Support\Collection;
 
-class File extends AbstractAPI
+class Client extends BaseClient
 {
     /**
      * @param $templateId

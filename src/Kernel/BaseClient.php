@@ -1,41 +1,38 @@
 <?php
 
-namespace Achais\ESign\Core;
+namespace Lmh\ESign\Core;
 
-use Achais\ESign\Exceptions\HttpException;
-use Achais\ESign\Support\Collection;
-use Achais\ESign\Support\Log;
+use Closure;
 use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Uri;
+use Lmh\ESign\Exceptions\HttpException;
+use Lmh\ESign\Support\Collection;
+use Lmh\ESign\Support\Log;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-abstract class AbstractAPI
+abstract class BaseClient
 {
+    const GET = 'get';
+    const POST = 'post';
+    const JSON = 'json';
+    const PUT = 'put';
+    const DELETE = 'delete';
+    /**
+     * @var int
+     */
+    protected static $maxRetries = 2;
     /**
      * Http instance.
      *
      * @var Http
      */
     protected $http;
-
     /**
      * The request token.
      *
      * @var AccessToken
      */
     protected $accessToken;
-
-    const GET = 'get';
-    const POST = 'post';
-    const JSON = 'json';
-    const PUT = 'put';
-    const DELETE = 'delete';
-
-    /**
-     * @var int
-     */
-    protected static $maxRetries = 2;
 
     /**
      * Constructor.
@@ -45,6 +42,61 @@ abstract class AbstractAPI
     public function __construct(AccessToken $accessToken)
     {
         $this->setAccessToken($accessToken);
+    }
+
+    /**
+     * @param int $retries
+     */
+    public static function maxRetries($retries)
+    {
+        self::$maxRetries = abs($retries);
+    }
+
+    /**
+     * Return the current accessToken.
+     *
+     * @return AccessToken
+     */
+    public function getAccessToken(): AccessToken
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * Set the request token.
+     *
+     * @param AccessToken $accessToken
+     *
+     * @return $this
+     */
+    public function setAccessToken(AccessToken $accessToken): BaseClient
+    {
+        $this->accessToken = $accessToken;
+
+        return $this;
+    }
+
+    /**
+     * Parse JSON from response and check error.
+     *
+     * @param $method
+     * @param array $args
+     * @return Collection|null
+     * @throws HttpException
+     */
+    public function parseJSON($method, array $args)
+    {
+        $http = $this->getHttp();
+
+        $contents = $http->parseJSON(call_user_func_array([$http, $method], $args));
+
+        if (empty($contents)) {
+            return null;
+        }
+
+        $this->checkAndThrow($contents);
+
+        return (new Collection($contents))->get('data');
     }
 
     /**
@@ -80,61 +132,6 @@ abstract class AbstractAPI
     }
 
     /**
-     * Return the current accessToken.
-     *
-     * @return AccessToken
-     */
-    public function getAccessToken()
-    {
-        return $this->accessToken;
-    }
-
-    /**
-     * Set the request token.
-     *
-     * @param AccessToken $accessToken
-     *
-     * @return $this
-     */
-    public function setAccessToken(AccessToken $accessToken)
-    {
-        $this->accessToken = $accessToken;
-
-        return $this;
-    }
-
-    /**
-     * @param int $retries
-     */
-    public static function maxRetries($retries)
-    {
-        self::$maxRetries = abs($retries);
-    }
-
-    /**
-     * Parse JSON from response and check error.
-     *
-     * @param $method
-     * @param array $args
-     * @return Collection|null
-     * @throws HttpException
-     */
-    public function parseJSON($method, array $args)
-    {
-        $http = $this->getHttp();
-
-        $contents = $http->parseJSON(call_user_func_array([$http, $method], $args));
-
-        if (empty($contents)) {
-            return null;
-        }
-
-        $this->checkAndThrow($contents);
-
-        return (new Collection($contents))->get('data');
-    }
-
-    /**
      * Register Guzzle middlewares.
      */
     protected function registerHttpMiddlewares()
@@ -148,31 +145,9 @@ abstract class AbstractAPI
     }
 
     /**
-     * Attache access token to request query.
-     *
-     * @return \Closure
-     */
-    protected function accessTokenMiddleware()
-    {
-        return function (callable $handler) {
-            return function (RequestInterface $request, array $options) use ($handler) {
-                if (!$this->accessToken) {
-                    return $handler($request, $options);
-                }
-
-                $request = $request->withHeader('X-Tsign-Open-App-Id', $this->accessToken->getAppId());
-                $request = $request->withHeader('X-Tsign-Open-Token', $this->accessToken->getToken());
-                $request = $request->withHeader('Content-Type', 'application/json');
-
-                return $handler($request, $options);
-            };
-        };
-    }
-
-    /**
      * Log the request.
      *
-     * @return \Closure
+     * @return Closure
      */
     protected function logMiddleware()
     {
@@ -185,7 +160,7 @@ abstract class AbstractAPI
     /**
      * Return retry middleware.
      *
-     * @return \Closure
+     * @return Closure
      */
     protected function retryMiddleware()
     {
@@ -212,6 +187,28 @@ abstract class AbstractAPI
 
             return false;
         });
+    }
+
+    /**
+     * Attache access token to request query.
+     *
+     * @return Closure
+     */
+    protected function accessTokenMiddleware(): Closure
+    {
+        return function (callable $handler) {
+            return function (RequestInterface $request, array $options) use ($handler) {
+                if (!$this->accessToken) {
+                    return $handler($request, $options);
+                }
+
+                $request = $request->withHeader('X-Tsign-Open-App-Id', $this->accessToken->getAppId());
+                $request = $request->withHeader('X-Tsign-Open-Token', $this->accessToken->getToken());
+                $request = $request->withHeader('Content-Type', 'application/json');
+
+                return $handler($request, $options);
+            };
+        };
     }
 
     /**

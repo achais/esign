@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Achais\ESign\Exceptions;
+namespace Lmh\ESign\Exceptions;
 
 /**
  * Class InvalidArgumentException
- * @package Achais\ESign\Exceptions
+ * @package Lmh\ESign\Exceptions
  */
 class InternalException extends Exception
 {

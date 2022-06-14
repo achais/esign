@@ -1,12 +1,12 @@
 <?php
 
-namespace Achais\ESign\SignFlow;
+namespace Lmh\ESign\Foundation\SignFlow;
 
-use Achais\ESign\Core\AbstractAPI;
-use Achais\ESign\Exceptions\HttpException;
-use Achais\ESign\Support\Collection;
+use Lmh\ESign\Core\BaseClient;
+use Lmh\ESign\Exceptions\HttpException;
+use Lmh\ESign\Support\Collection;
 
-class SignFlow extends AbstractAPI
+class Client extends BaseClient
 {
     const NOTICE_TYPE_SMS = '1';
     const NOTICE_TYPE_EMAIL = '2';

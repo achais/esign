@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Achais\ESign\Support;
+namespace Lmh\ESign\Support;
 
 
 use ArrayAccess;
@@ -34,13 +34,14 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     }
 
     /**
-     * Return all items.
+     * Set the item value.
      *
-     * @return array
+     * @param string $key
+     * @param mixed $value
      */
-    public function all()
+    public function set($key, $value)
     {
-        return $this->items;
+        Arr::set($this->items, $key, $value);
     }
 
     /**
@@ -63,6 +64,19 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
         }
 
         return $return;
+    }
+
+    /**
+     * Retrieve item from Collection.
+     *
+     * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        return Arr::get($this->items, $key, $default);
     }
 
     /**
@@ -96,15 +110,13 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     }
 
     /**
-     * To determine Whether the specified element exists.
+     * Return all items.
      *
-     * @param string $key
-     *
-     * @return bool
+     * @return array
      */
-    public function has($key)
+    public function all()
     {
-        return !is_null(Arr::get($this->items, $key));
+        return $this->items;
     }
 
     /**
@@ -143,40 +155,6 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     }
 
     /**
-     * Set the item value.
-     *
-     * @param string $key
-     * @param mixed $value
-     */
-    public function set($key, $value)
-    {
-        Arr::set($this->items, $key, $value);
-    }
-
-    /**
-     * Retrieve item from Collection.
-     *
-     * @param string $key
-     * @param mixed $default
-     *
-     * @return mixed
-     */
-    public function get($key, $default = null)
-    {
-        return Arr::get($this->items, $key, $default);
-    }
-
-    /**
-     * Remove item form Collection.
-     *
-     * @param string $key
-     */
-    public function forget($key)
-    {
-        Arr::forget($this->items, $key);
-    }
-
-    /**
      * Build to array.
      *
      * @return array
@@ -184,6 +162,16 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     public function toArray()
     {
         return $this->all();
+    }
+
+    /**
+     * To string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toJson();
     }
 
     /**
@@ -196,16 +184,6 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     public function toJson($option = JSON_UNESCAPED_UNICODE)
     {
         return json_encode($this->all(), $option);
-    }
-
-    /**
-     * To string.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->toJson();
     }
 
     /**
@@ -318,6 +296,18 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     }
 
     /**
+     * To determine Whether the specified element exists.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function has($key)
+    {
+        return !is_null(Arr::get($this->items, $key));
+    }
+
+    /**
      * Unsets an data by key.
      *
      * @param string $key
@@ -328,6 +318,16 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     }
 
     /**
+     * Remove item form Collection.
+     *
+     * @param string $key
+     */
+    public function forget($key)
+    {
+        Arr::forget($this->items, $key);
+    }
+
+    /**
      * var_export.
      *
      * @return array
@@ -335,6 +335,23 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     public function __set_state()
     {
         return $this->all();
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to unset.
+     *
+     * @see http://php.net/manual/en/arrayaccess.offsetunset.php
+     *
+     * @param mixed $offset <p>
+     *                      The offset to unset.
+     *                      </p>
+     */
+    public function offsetUnset($offset)
+    {
+        if ($this->offsetExists($offset)) {
+            $this->forget($offset);
+        }
     }
 
     /**
@@ -353,23 +370,6 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     public function offsetExists($offset)
     {
         return $this->has($offset);
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to unset.
-     *
-     * @see http://php.net/manual/en/arrayaccess.offsetunset.php
-     *
-     * @param mixed $offset <p>
-     *                      The offset to unset.
-     *                      </p>
-     */
-    public function offsetUnset($offset)
-    {
-        if ($this->offsetExists($offset)) {
-            $this->forget($offset);
-        }
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Achais\ESign\Exceptions;
+namespace Lmh\ESign\Exceptions;
 
 
 class HttpException extends Exception

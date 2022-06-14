@@ -1,12 +1,12 @@
 <?php
 
-namespace Achais\ESign\Account;
+namespace Lmh\ESign\Foundation\Account;
 
-use Achais\ESign\Core\AbstractAPI;
-use Achais\ESign\Exceptions\HttpException;
-use Achais\ESign\Support\Collection;
+use Lmh\ESign\Core\BaseClient;
+use Lmh\ESign\Exceptions\HttpException;
+use Lmh\ESign\Support\Collection;
 
-class Account extends AbstractAPI
+class Client extends BaseClient
 {
     /**
      * 创建个人账号

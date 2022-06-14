@@ -1,12 +1,13 @@
 <?php
 
 
-namespace Achais\ESign\Core;
+namespace Lmh\ESign\Core;
 
-use Achais\ESign\Exceptions\HttpException;
-use Achais\ESign\Support\Log;
-use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
+use Lmh\ESign\Exceptions\HttpException;
+use Lmh\ESign\Support\Log;
 use Psr\Http\Message\ResponseInterface;
 
 class Http
@@ -16,21 +17,6 @@ class Http
      * Maybe useful in the future.
      */
     const USER_DEFINED_HANDLER = 'userDefined';
-
-    /**
-     * Http client.
-     *
-     * @var HttpClient
-     */
-    protected $client;
-
-    /**
-     * The middlewares.
-     *
-     * @var array
-     */
-    protected $middlewares = [];
-
     /**
      * @var array
      */
@@ -39,13 +25,24 @@ class Http
             CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
         ],
     ];
-
     /**
      * Guzzle client default settings.
      *
      * @var array
      */
     protected static $defaults = [];
+    /**
+     * Http client.
+     *
+     * @var Client
+     */
+    protected $client;
+    /**
+     * The middlewares.
+     *
+     * @var array
+     */
+    protected $middlewares = [];
 
     /**
      * Set guzzle default settings.
@@ -75,11 +72,91 @@ class Http
      *
      * @return ResponseInterface
      *
-     * @throws HttpException
      */
-    public function get($url, array $options = [])
+    public function get($url, array $options = []): ResponseInterface
     {
         return $this->request($url, 'GET', ['query' => $options]);
+    }
+
+    /**
+     * Make a request.
+     *
+     * @param string $url
+     * @param string $method
+     * @param array $options
+     *
+     * @return ResponseInterface
+     *
+     * @throws GuzzleException
+     */
+    public function request($url, $method = 'GET', $options = [])
+    {
+        $method = strtoupper($method);
+
+        $options = array_merge(self::$defaults, $options);
+
+        Log::debug('Client Request:', compact('url', 'method', 'options'));
+
+        $options['handler'] = $this->getHandler();
+
+        $response = $this->getClient()->request($method, $url, $options);
+
+        Log::debug('API response:', [
+            'Status' => $response->getStatusCode(),
+            'Reason' => $response->getReasonPhrase(),
+            'Headers' => $response->getHeaders(),
+            'Body' => strval($response->getBody()),
+        ]);
+
+        return $response;
+    }
+
+    /**
+     * Build a handler.
+     *
+     * @return HandlerStack
+     */
+    protected function getHandler()
+    {
+        $stack = HandlerStack::create();
+
+        foreach ($this->middlewares as $middleware) {
+            $stack->push($middleware);
+        }
+
+        if (isset(static::$defaults['handler']) && is_callable(static::$defaults['handler'])) {
+            $stack->push(static::$defaults['handler'], self::USER_DEFINED_HANDLER);
+        }
+
+        return $stack;
+    }
+
+    /**
+     * Return GuzzleHttp\Client instance.
+     *
+     * @return Client
+     */
+    public function getClient()
+    {
+        if (!($this->client instanceof Client)) {
+            $this->client = new Client();
+        }
+
+        return $this->client;
+    }
+
+    /**
+     * Set GuzzleHttp\Client.
+     *
+     * @param Client $client
+     *
+     * @return Http
+     */
+    public function setClient(Client $client)
+    {
+        $this->client = $client;
+
+        return $this;
     }
 
     /**
@@ -106,7 +183,7 @@ class Http
         return $this->request($url, 'PUT', [$key => $options]);
     }
 
-    public function delete($url, $options = [])
+    public function delete($url, $options = []): ResponseInterface
     {
         $key = is_array($options) ? 'form_params' : 'body';
 
@@ -162,34 +239,6 @@ class Http
     }
 
     /**
-     * Set GuzzleHttp\Client.
-     *
-     * @param \GuzzleHttp\Client $client
-     *
-     * @return Http
-     */
-    public function setClient(HttpClient $client)
-    {
-        $this->client = $client;
-
-        return $this;
-    }
-
-    /**
-     * Return GuzzleHttp\Client instance.
-     *
-     * @return \GuzzleHttp\Client
-     */
-    public function getClient()
-    {
-        if (!($this->client instanceof HttpClient)) {
-            $this->client = new HttpClient();
-        }
-
-        return $this->client;
-    }
-
-    /**
      * Add a middleware.
      *
      * @param callable $middleware
@@ -214,39 +263,7 @@ class Http
     }
 
     /**
-     * Make a request.
-     *
-     * @param string $url
-     * @param string $method
-     * @param array $options
-     *
-     * @return ResponseInterface
-     *
-     */
-    public function request($url, $method = 'GET', $options = [])
-    {
-        $method = strtoupper($method);
-
-        $options = array_merge(self::$defaults, $options);
-
-        Log::debug('Client Request:', compact('url', 'method', 'options'));
-
-        $options['handler'] = $this->getHandler();
-
-        $response = $this->getClient()->request($method, $url, $options);
-
-        Log::debug('API response:', [
-            'Status' => $response->getStatusCode(),
-            'Reason' => $response->getReasonPhrase(),
-            'Headers' => $response->getHeaders(),
-            'Body' => strval($response->getBody()),
-        ]);
-
-        return $response;
-    }
-
-    /**
-     * @param \Psr\Http\Message\ResponseInterface|string $body
+     * @param ResponseInterface|string $body
      *
      * @return mixed
      *
@@ -271,25 +288,5 @@ class Http
         }
 
         return $contents;
-    }
-
-    /**
-     * Build a handler.
-     *
-     * @return HandlerStack
-     */
-    protected function getHandler()
-    {
-        $stack = HandlerStack::create();
-
-        foreach ($this->middlewares as $middleware) {
-            $stack->push($middleware);
-        }
-
-        if (isset(static::$defaults['handler']) && is_callable(static::$defaults['handler'])) {
-            $stack->push(static::$defaults['handler'], self::USER_DEFINED_HANDLER);
-        }
-
-        return $stack;
     }
 }

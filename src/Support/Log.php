@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Achais\ESign\Support;
+namespace Lmh\ESign\Support;
 
 
 use Monolog\Handler\ErrorLogHandler;
@@ -9,24 +9,17 @@ use Monolog\Handler\NullHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class Log
+ * @package Lmh\ESign\Support
+ * User: lmh <lmh@weiyian.com>
+ * Date: 2022/6/14
+ * @method debug($message, array $context = array())
+ * @method info($message, array $context = array())
+ */
 class Log
 {
     protected static $logger;
-
-    public static function getLogger()
-    {
-        return self::$logger ?: self::$logger = self::createDefaultLogger();
-    }
-
-    /**
-     * Set logger.
-     *
-     * @param \Psr\Log\LoggerInterface $logger
-     */
-    public static function setLogger(LoggerInterface $logger)
-    {
-        self::$logger = $logger;
-    }
 
     /**
      * Tests if logger exists.
@@ -42,7 +35,7 @@ class Log
      * Forward call.
      *
      * @param string $method
-     * @param array  $args
+     * @param array $args
      *
      * @return mixed
      */
@@ -51,23 +44,25 @@ class Log
         return forward_static_call_array([self::getLogger(), $method], $args);
     }
 
-    /**
-     * Forward call.
-     *
-     * @param string $method
-     * @param array  $args
-     *
-     * @return mixed
-     */
-    public function __call($method, $args)
+    public static function getLogger()
     {
-        return call_user_func_array([self::getLogger(), $method], $args);
+        return self::$logger ?: self::$logger = self::createDefaultLogger();
+    }
+
+    /**
+     * Set logger.
+     *
+     * @param LoggerInterface $logger
+     */
+    public static function setLogger(LoggerInterface $logger)
+    {
+        self::$logger = $logger;
     }
 
     /**
      * Make a default log instance.
      *
-     * @return \Monolog\Logger
+     * @return Logger
      */
     private static function createDefaultLogger()
     {
@@ -80,5 +75,18 @@ class Log
         }
 
         return $log;
+    }
+
+    /**
+     * Forward call.
+     *
+     * @param string $method
+     * @param array $args
+     *
+     * @return mixed
+     */
+    public function __call($method, $args)
+    {
+        return call_user_func_array([self::getLogger(), $method], $args);
     }
 }

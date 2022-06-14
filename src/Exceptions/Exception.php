@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Achais\ESign\Exceptions;
+namespace Lmh\ESign\Exceptions;
 
 /**
  * Class Exception
- * @package Achais\ESign\Exceptions
+ * @package Lmh\ESign\Exceptions
  */
 class Exception extends \Exception
 {
